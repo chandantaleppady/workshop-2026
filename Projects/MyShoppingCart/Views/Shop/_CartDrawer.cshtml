@@ -44,4 +44,10 @@ else
         <span class="text-slate-500">Total (@Model.TotalCount item@(Model.TotalCount == 1 ? "" : "s"))</span>
         <span class="text-2xl font-bold text-brand-700">₹@Model.GrandTotal.ToString("0")</span>
     </div>
+    <form id="confirm-order-form" asp-controller="Shop" asp-action="ConfirmOrder" method="post" class="mt-6">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="w-full rounded-lg bg-brand-600 px-4 py-3 font-semibold text-white shadow hover:bg-brand-700 transition">
+            Confirm order
+        </button>
+    </form>
 }

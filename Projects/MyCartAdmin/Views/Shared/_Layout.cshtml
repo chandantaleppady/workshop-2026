@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - My Cart Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: "#edf7f1", 100: "#d8ecdf", 600: "#176c50", 700: "#10553e" }
+                    },
+                    fontFamily: {
+                        sans: ["DM Sans", "Segoe UI", "sans-serif"],
+                        mono: ["DM Mono", "Consolas", "monospace"]
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="min-h-screen bg-[#f4f6f3] font-sans text-[#202824] antialiased">
+    <header class="border-b border-[#e0e6e2] bg-white">
+        <div class="mx-auto flex h-[68px] w-[min(1220px,calc(100%-30px))] items-center justify-between sm:w-[min(1220px,calc(100%-48px))]">
+            <a class="flex items-center gap-3 text-base font-semibold text-[#202824] no-underline" asp-controller="Orders" asp-action="Index">
+                <span class="grid size-[34px] place-items-center rounded-md bg-brand-600 text-xs font-bold text-white">MC</span>
+                <span>My Cart <strong class="text-brand-600">Admin</strong></span>
+            </a>
+            <span class="text-xs text-[#68736e]">Order fulfillment</span>
+        </div>
+    </header>
+    <main role="main" class="mx-auto w-[min(1220px,calc(100%-30px))] py-7 sm:w-[min(1220px,calc(100%-48px))] sm:py-10">
+        @RenderBody()
+    </main>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

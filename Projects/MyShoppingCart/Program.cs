@@ -3,6 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<MyShoppingCart.Services.CartService>();
+builder.Services.AddScoped<MyShoppingCart.Services.OrderService>();
 
 var app = builder.Build();
 

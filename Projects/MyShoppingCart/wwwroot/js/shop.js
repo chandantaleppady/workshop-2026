@@ -56,6 +56,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    document.addEventListener("submit", async (event) => {
+        const form = event.target.closest("#confirm-order-form");
+        if (!form) return;
+
+        event.preventDefault();
+        const button = form.querySelector("button[type='submit']");
+        button.disabled = true;
+
+        try {
+            const response = await fetch(form.action, {
+                method: "POST",
+                body: new FormData(form)
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || "The order could not be saved.");
+
+            updateBadge(0, false);
+            document.querySelectorAll(".product-card[data-product-id]").forEach((card) => {
+                updateCardQty(card.dataset.productId, 0);
+            });
+            await loadCart();
+
+            const confirmation = document.createElement("p");
+            confirmation.className = "mb-4 rounded-lg bg-green-50 p-3 text-sm font-medium text-green-800";
+            confirmation.textContent = `Order ${data.orderId} was placed successfully.`;
+            drawerContent.prepend(confirmation);
+        } catch (error) {
+            const message = document.createElement("p");
+            message.className = "mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-800";
+            message.textContent = error.message;
+            form.prepend(message);
+            button.disabled = false;
+        }
+    });
+
     async function loadCart() {
         const response = await fetch("/Shop/Cart");
         drawerContent.innerHTML = await response.text();
