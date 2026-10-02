@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - My Shopping Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d' }
+                    },
+                    keyframes: {
+                        pulseBadge: { '0%, 100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.4)' } }
+                    },
+                    animation: {
+                        'badge-pulse': 'pulseBadge 0.4s ease-in-out'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+    <header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-slate-200 shadow-sm">
+        <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a asp-controller="Shop" asp-action="Index" class="text-xl font-bold text-brand-700 tracking-tight hover:text-brand-600 transition">
+                🥕 My Shopping Cart
+            </a>
+            <button type="button" id="cart-button" aria-label="Open cart"
+                    class="relative p-2 rounded-full text-2xl hover:bg-brand-50 transition">
+                🛒
+                <span id="cart-badge"
+                      class="invisible absolute -top-1 -right-1 min-w-[1.35rem] h-[1.35rem] px-1 rounded-full bg-rose-500 text-white text-xs font-bold flex items-center justify-center shadow">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        @RenderBody()
+    </main>
+
+    <footer class="border-t border-slate-200 mt-8">
+        <div class="max-w-6xl mx-auto px-4 py-4 text-center text-sm text-slate-400">
+            &copy; 2026 - My Shopping Cart (Demo)
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

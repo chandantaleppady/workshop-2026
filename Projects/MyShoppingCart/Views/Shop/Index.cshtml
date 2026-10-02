@@ -1,0 +1,39 @@
+@model List<(MyShoppingCart.Models.Product Product, int Quantity)>
+
+<div class="mb-8">
+    <h1 class="text-3xl font-bold tracking-tight">Fresh Vegetables</h1>
+    <p class="text-slate-500 mt-1">Hand-picked daily from local farms.</p>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    @foreach (var item in Model)
+    {
+        <div class="product-card group bg-white rounded-2xl border border-slate-200 p-5 text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+             data-product-id="@item.Product.Id">
+            <div class="rounded-xl overflow-hidden mb-4">
+                <img class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                     src="@item.Product.ImageUrl" alt="@item.Product.Name" loading="lazy" />
+            </div>
+            <div class="text-lg font-semibold">@item.Product.Name</div>
+            <div class="text-brand-600 font-medium mb-4">₹@item.Product.Price.ToString("0") <span class="text-slate-400 text-sm font-normal">/ @item.Product.Unit</span></div>
+            <div class="inline-flex items-center gap-3">
+                <button type="button" data-action="remove" aria-label="Remove one"
+                        class="qty-btn qty-minus w-9 h-9 rounded-full border border-brand-600 text-brand-700 text-lg leading-none hover:bg-brand-600 hover:text-white transition disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-brand-700"
+                        @(item.Quantity == 0 ? "disabled" : "")>−</button>
+                <span class="qty-value min-w-[1.5rem] text-lg font-bold tabular-nums">@item.Quantity</span>
+                <button type="button" data-action="add" aria-label="Add one"
+                        class="qty-btn qty-plus w-9 h-9 rounded-full bg-brand-600 text-white text-lg leading-none shadow hover:bg-brand-700 active:scale-95 transition">+</button>
+            </div>
+        </div>
+    }
+</div>
+
+<div id="cart-overlay" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40"></div>
+<aside id="cart-drawer" aria-label="Shopping cart"
+       class="hidden fixed top-0 right-0 z-50 h-full w-full max-w-sm bg-white shadow-2xl p-6 overflow-y-auto">
+    <div id="cart-drawer-content"></div>
+</aside>
+
+@section Scripts {
+    <script src="~/js/shop.js" asp-append-version="true"></script>
+}
