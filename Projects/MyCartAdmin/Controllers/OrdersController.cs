@@ -71,7 +71,7 @@ public sealed class OrdersController : Controller
         {
             case DispatchResult.Sent:
                 TempData["Success"] = "The order was sent to the warehouse.";
-                break;
+                return RedirectToAction(nameof(Index));
             case DispatchResult.NotFound:
                 return NotFound();
             case DispatchResult.NotEligible:

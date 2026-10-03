@@ -76,7 +76,7 @@ Migration must be safe to run through the project's normal deployment migration 
 5. After a successful upload, it records status `Sent`, the blob name, and `SentToWarehouseAtUtc` in SQL Server.
 6. If upload fails, it records `Failed` with a sanitized error for display and logging. The order remains eligible for retry.
 
-SQL Server and Blob Storage do not share a transaction. Use a deterministic blob name such as `orders/{OrderId}.json` and make retries idempotent. If the blob upload succeeds but the final SQL update fails, retrying the same order must safely replace or verify the same logical document rather than create a duplicate. Provide a recovery path for stale `Sending` rows, such as an admin retry action after a timeout or a scheduled reconciliation process.
+SQL Server and Blob Storage do not share a transaction. Use a deterministic blob name such as `{FolderName}/{OrderId}.json` (`BlobStorage:FolderName`, default `orders`) and make retries idempotent. If the blob upload succeeds but the final SQL update fails, retrying the same order must safely replace or verify the same logical document rather than create a duplicate. Provide a recovery path for stale `Sending` rows, such as an admin retry action after a timeout or a scheduled reconciliation process.
 
 ### JSON Contract
 
@@ -109,8 +109,9 @@ Database and Blob Storage settings are supplied through ASP.NET Core configurati
     "OrdersDatabase": "<SQL Server connection string>"
   },
   "BlobStorage": {
-    "ServiceUri": "<Azure Blob service URI>",
-    "ContainerName": "warehouse-orders"
+    "ConnectionString": "<Azure Storage connection string>",
+    "ContainerName": "warehouse-orders",
+    "FolderName": "orders"
   }
 }
 ```

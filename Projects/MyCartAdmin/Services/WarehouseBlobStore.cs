@@ -1,5 +1,4 @@
 using Azure;
-using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using MyCartAdmin.Models;
@@ -22,7 +21,10 @@ public sealed class WarehouseBlobStore
         var container = GetContainerClient();
         await container.CreateIfNotExistsAsync(PublicAccessType.None, cancellationToken: cancellationToken);
 
-        var blobName = $"orders/{document.OrderId:D}.json";
+        var folderName = GetFolderName();
+        var blobName = string.IsNullOrEmpty(folderName)
+            ? $"{document.OrderId:D}.json"
+            : $"{folderName}/{document.OrderId:D}.json";
         var blob = container.GetBlobClient(blobName);
         var payload = BinaryData.FromObjectAsJson(document, JsonOptions);
         await blob.UploadAsync(payload, new BlobUploadOptions
@@ -41,6 +43,13 @@ public sealed class WarehouseBlobStore
         return response.Value.Content;
     }
 
+    private string GetFolderName()
+    {
+        // Missing setting falls back to "orders"; an explicit empty value uploads to the container root.
+        var folderName = _configuration["BlobStorage:FolderName"] ?? "orders";
+        return folderName.Trim().Trim('/');
+    }
+
     private BlobContainerClient GetContainerClient()
     {
         var containerName = _configuration["BlobStorage:ContainerName"];
@@ -50,17 +59,11 @@ public sealed class WarehouseBlobStore
         }
 
         var connectionString = _configuration["BlobStorage:ConnectionString"];
-        if (!string.IsNullOrWhiteSpace(connectionString))
+        if (string.IsNullOrWhiteSpace(connectionString))
         {
-            return new BlobContainerClient(connectionString, containerName);
+            throw new InvalidOperationException("BlobStorage:ConnectionString is not configured.");
         }
 
-        var serviceUri = _configuration["BlobStorage:ServiceUri"];
-        if (!Uri.TryCreate(serviceUri, UriKind.Absolute, out var uri))
-        {
-            throw new InvalidOperationException("Configure BlobStorage:ServiceUri or BlobStorage:ConnectionString.");
-        }
-
-        return new BlobServiceClient(uri, new DefaultAzureCredential()).GetBlobContainerClient(containerName);
+        return new BlobContainerClient(connectionString, containerName);
     }
 }

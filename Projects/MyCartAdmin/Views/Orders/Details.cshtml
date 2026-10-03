@@ -56,9 +56,9 @@
         else
         {
             <p class="mb-4 text-sm leading-relaxed text-[#68736e]">Send the saved order details to the warehouse as a JSON document.</p>
-            <form asp-action="SendToWarehouse" method="post" onsubmit="return confirm('Send this order to the warehouse?')">
+            <form id="send-to-warehouse-form" asp-action="SendToWarehouse" method="post">
                 <input type="hidden" name="id" value="@Model.OrderId" />
-                <button class="inline-flex min-h-10 w-full items-center justify-center rounded bg-brand-600 px-4 text-xs font-semibold text-white hover:bg-brand-700" type="submit">@(Model.DispatchStatus == "Failed" ? "Retry dispatch" : "Send to warehouse")</button>
+                <button id="send-to-warehouse-button" class="inline-flex min-h-10 w-full items-center justify-center rounded bg-brand-600 px-4 text-xs font-semibold text-white hover:bg-brand-700 disabled:opacity-70" type="submit">@(Model.DispatchStatus == "Failed" ? "Retry dispatch" : "Send to warehouse")</button>
             </form>
             @if (Model.DispatchStatus == "Failed" && !string.IsNullOrWhiteSpace(Model.LastDispatchError))
             {
@@ -68,3 +68,36 @@
         <div class="mt-5 grid gap-1 border-t border-[#e0e6e2] pt-4 text-xs"><strong class="font-semibold">Payload</strong><span class="text-[#68736e]">@Model.Items.Count line items · @Model.ItemCount units</span></div>
     </aside>
 </div>
+
+@section Scripts {
+    <style>
+        .is-busy, .is-busy * { cursor: wait !important; }
+    </style>
+    <script>
+        (function () {
+            const form = document.getElementById("send-to-warehouse-form");
+            if (!form) return;
+            const button = document.getElementById("send-to-warehouse-button");
+            const originalText = button.textContent;
+
+            form.addEventListener("submit", function (event) {
+                if (!confirm("Send this order to the warehouse?")) {
+                    event.preventDefault();
+                    return;
+                }
+                document.documentElement.classList.add("is-busy");
+                button.disabled = true;
+                button.textContent = "Sending...";
+            });
+
+            // Reset the busy state if the page is restored from the back/forward cache.
+            window.addEventListener("pageshow", function (event) {
+                if (event.persisted) {
+                    document.documentElement.classList.remove("is-busy");
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }
+            });
+        })();
+    </script>
+}
