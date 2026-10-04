@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCartAdmin", "Projects\MyC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyShoppingCart", "Projects\MyShoppingCart\MyShoppingCart.csproj", "{C17E805F-00DB-4F5E-AA58-E88DBB6ECFC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderBlobLogger", "Projects\OrderBlobLogger\OrderBlobLogger.csproj", "{74026116-D968-4492-9CF8-C6798505982C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,18 @@ Global
 		{C17E805F-00DB-4F5E-AA58-E88DBB6ECFC5}.Release|x64.Build.0 = Release|Any CPU
 		{C17E805F-00DB-4F5E-AA58-E88DBB6ECFC5}.Release|x86.ActiveCfg = Release|Any CPU
 		{C17E805F-00DB-4F5E-AA58-E88DBB6ECFC5}.Release|x86.Build.0 = Release|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Debug|x64.Build.0 = Debug|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Debug|x86.Build.0 = Debug|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Release|x64.ActiveCfg = Release|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Release|x64.Build.0 = Release|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Release|x86.ActiveCfg = Release|Any CPU
+		{74026116-D968-4492-9CF8-C6798505982C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,5 +64,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{20E80604-BF33-4CE0-B9FB-46CEB0EA176B} = {17245595-230B-9055-A944-863F0DDDA8E8}
 		{C17E805F-00DB-4F5E-AA58-E88DBB6ECFC5} = {17245595-230B-9055-A944-863F0DDDA8E8}
+		{74026116-D968-4492-9CF8-C6798505982C} = {17245595-230B-9055-A944-863F0DDDA8E8}
 	EndGlobalSection
 EndGlobal
