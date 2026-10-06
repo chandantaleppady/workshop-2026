@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NITTE Cloud Workshop - My First Azure Web App</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: #F4F7FF; color: #151F6D; }
+    header { background: #0050FF; color: #fff; padding: 28px 40px; }
+    header h1 { margin: 0; font-size: 28px; }
+    header p { margin: 6px 0 0; opacity: .9; }
+    main { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+    .card { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .card h2 { margin-top: 0; font-size: 20px; }
+    input { padding: 10px; border: 1px solid #C9D4F2; border-radius: 8px; width: 260px; font-size: 15px; }
+    button { padding: 10px 18px; border: 0; border-radius: 8px; background: #0050FF; color: #fff; font-size: 15px; cursor: pointer; }
+    button:hover { background: #151F6D; }
+    pre { background: #0D1117; color: #7CFC9A; padding: 14px; border-radius: 8px; white-space: pre-wrap; min-height: 44px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #E3E8F5; }
+    th { background: #EEF3FF; }
+    .badge { display: inline-block; background: #EEF3FF; color: #0050FF; padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    footer { text-align: center; color: #636669; font-size: 13px; padding: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hello from Azure App Service!</h1>
+    <!-- STEP 1: change "Your Name" to YOUR name before deploying -->
+    <p>Deployed by: <strong>Your Name</strong> &nbsp;|&nbsp; MCA Cloud Workshop - NITTE</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <!-- STEP 2: change to Version 2 / Version 3 each time you redeploy -->
+      <span class="badge">Version 1</span>
+      <h2>My first website on the cloud</h2>
+      <p>This page is a plain HTML file. It is hosted on <b>Azure App Service</b> (PaaS) -
+         no server to buy, no OS to patch. Azure gives it a public URL with free HTTPS.</p>
+    </div>
+
+    <div class="card">
+      <h2>Lab 3: Call my Azure Function</h2>
+      <p>Type your name and click the button. The page calls the <code>/api/hello</code> function.</p>
+      <input id="nameBox" placeholder="Enter your name">
+      <button onclick="sayHello()">Say hello</button>
+      <pre id="helloOut">Result will appear here...</pre>
+    </div>
+
+    <div class="card">
+      <h2>Stretch: Students from Azure SQL</h2>
+      <p>The <code>/api/students</code> function reads the Students table using a SQL input binding.</p>
+      <button onclick="loadStudents()">Load students</button>
+      <div id="studentsOut" style="margin-top:12px;"></div>
+    </div>
+  </main>
+
+  <footer>Day 1 | Cloud Computing &amp; Microsoft Azure | October 2026</footer>
+
+  <script>
+    // STEP 3 (Lab 3): paste YOUR Function App "Default domain" and keep /api at the end (no trailing slash)
+    // Example: "https://func-nitte-asha07.centralindia-01.azurewebsites.net/api"
+    const FUNCTION_BASE_URL = "https://<your-function-app-default-domain>/api";
+
+    async function sayHello() {
+      const out = document.getElementById("helloOut");
+      const name = document.getElementById("nameBox").value || "student";
+      out.textContent = "Calling the function...";
+      try {
+        const res = await fetch(`${FUNCTION_BASE_URL}/hello?name=${encodeURIComponent(name)}`);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        out.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        out.textContent = "Error: " + err.message + "\nCheck: function URL, CORS setting, and that the function is running.";
+      }
+    }
+
+    async function loadStudents() {
+      const out = document.getElementById("studentsOut");
+      out.textContent = "Loading... (first call can take up to a minute if the free database was paused)";
+      try {
+        const res = await fetch(`${FUNCTION_BASE_URL}/students`);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const rows = await res.json();
+        if (!rows.length) { out.textContent = "No rows found in the Students table."; return; }
+        out.innerHTML = "<table><tr><th>Id</th><th>Name</th></tr>" +
+          rows.map(r => `<tr><td>${r.Id}</td><td>${r.Name}</td></tr>`).join("") + "</table>";
+      } catch (err) {
+        out.textContent = "Error: " + err.message + " - wait 1 minute and retry (free DB may be waking up). Then check SqlConnectionString and SQL firewall.";
+      }
+    }
+  </script>
+</body>
+</html>

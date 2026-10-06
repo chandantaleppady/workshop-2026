@@ -1,0 +1,29 @@
+NITTE Day 1 - deploy and test commands
+=======================================
+Replace <rg>, <webapp>, <function-default-domain> with your own values.
+
+--- A. Deploy index.html from your LAPTOP (Windows PowerShell, Azure CLI installed) ---
+az login                                   # only first time / when token expires
+cd C:\Users\<you>\Downloads                # folder that has index.html
+Remove-Item site.zip -ErrorAction SilentlyContinue
+Compress-Archive -Path .\index.html -DestinationPath .\site.zip
+az webapp deploy --resource-group <rg> --name <webapp> --src-path ".\site.zip" --type zip
+
+--- B. Deploy from AZURE CLOUD SHELL ---
+# First upload index.html: Cloud Shell toolbar > Manage files > Upload  (Windows C:\ paths do NOT work here)
+# PowerShell mode (prompt starts with PS):
+Remove-Item site.zip -ErrorAction SilentlyContinue
+Compress-Archive -Path index.html -DestinationPath site.zip
+az webapp deploy --resource-group <rg> --name <webapp> --src-path site.zip --type zip
+# Bash mode:
+rm -f site.zip && zip site.zip index.html
+az webapp deploy --resource-group <rg> --name <webapp> --src-path site.zip --type zip
+
+--- C. Find your resource group / app names ---
+az webapp list --query "[].{name:name, rg:resourceGroup}" -o table
+az functionapp list --query "[].{name:name, rg:resourceGroup, host:defaultHostName}" -o table
+
+--- D. Test functions from Cloud Shell (bypasses laptop web filters) ---
+curl -i "https://<function-default-domain>/api/hello?name=Asha"
+curl -i "https://<function-default-domain>/api/students"
+# -i shows the status code: 200 = OK, 404 = wrong name/URL, 500 = function error (check Logs)

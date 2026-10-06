@@ -5,16 +5,23 @@ namespace MyShoppingCart.Services;
 
 public class OrderService
 {
-    private readonly string _connectionString;
+    private readonly string? _connectionString;
+    private readonly ILogger<OrderService> _logger;
 
-    public OrderService(IConfiguration configuration)
+    public OrderService(IConfiguration configuration, ILogger<OrderService> logger)
     {
-        _connectionString = configuration.GetConnectionString("OrdersDatabase")
-            ?? throw new InvalidOperationException("Connection string 'OrdersDatabase' is not configured.");
+        _connectionString = configuration.GetConnectionString("OrdersDatabase");
+        _logger = logger;
     }
 
     public async Task<Guid> SaveOrderAsync(CartViewModel cart)
     {
+        if (string.IsNullOrWhiteSpace(_connectionString))
+        {
+            _logger.LogError("Connection string '{ConnectionStringName}' is not configured.", "OrdersDatabase");
+            throw new InvalidOperationException("Connection string 'OrdersDatabase' is not configured.");
+        }
+
         var orderId = Guid.NewGuid();
         const string sql = """
             INSERT INTO dbo.Orders (OrderId, ProductId, ProductName, UnitPrice, Quantity)

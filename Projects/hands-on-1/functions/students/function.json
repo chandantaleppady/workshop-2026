@@ -1,0 +1,14 @@
+{
+  "bindings": [
+    { "authLevel": "anonymous", "type": "httpTrigger", "direction": "in", "name": "req", "methods": ["get"] },
+    { "type": "http", "direction": "out", "name": "res" },
+    {
+      "name": "students",
+      "type": "sql",
+      "direction": "in",
+      "commandText": "SELECT Id, Name FROM dbo.Students ORDER BY Id",
+      "commandType": "Text",
+      "connectionStringSetting": "SqlConnectionString"
+    }
+  ]
+}
